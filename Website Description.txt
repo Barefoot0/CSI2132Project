@@ -1,0 +1,53 @@
+Website Description
+
+
+Users will be able to see available rooms by providing different criteria     
+Criteria:
+- Dates (start, end)
+- Booking/renting
+- Room capacity
+- Area
+- Hotel Chain
+- Rating of Hotel
+- Total # of rooms in hotel
+- Price of the rooms
+
+"These criteria should be: the dates (start, end) of booking or renting, the room capacity, the area, the hotel chain, the category of the hotel, the total number of rooms in the hotel, the price of the rooms. The user should be able to see the available choices when he/she changes the value of any of these criteria."
+
+Should allow insert/delete/update all info related to customers, employee, hotels, and rooms
+
+User can be customer (who books rooms) or an employee (who turns bookings into rentings or directly renting when customers are in-store)
+
+User should be able to see it in two views, # of available rooms/area or all available rooms of a hotel
+
+
+General Website Structure
+=========================
+Website home page (1)
+
+(1) --> manage_database (2)
+(1) --> index (3)
+(1) --> employee_nav (4)
+
+(2) --> ??
+
+(3) --> display_rooms (6)
+
+(4) --> booking_to_renting (7)
+(4) --> index (3)
+=========================
+
+Need to do:
+- Fix the date criteria --- DONE
+- Create booking or renting
+
+- Sort out the manage_database stuff (insert/delete/edit)
+- Get the employee stuff done
+	- Get the nav page done
+	- Get the booking_to_renting done
+	- Get processing payments done
+- Sort out the two views
+
+
+
+
