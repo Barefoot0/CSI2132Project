@@ -223,7 +223,7 @@
         <td><%= rating %></td>
         <td><%= capacity %></td>
         <td><%= view2 %></td>
-        <td><a href="book_info.jsp?price=<%=price2%>&room_id=<%=roomId%>&hotel_id=<%=hotelId%>">Book</a></td>
+        <td><a href="book_info.jsp?startDate=<%=startDate%>&endDate=<%=endDate%>&price=<%=price2%>&room_id=<%=roomId%>&hotel_id=<%=hotelId%>">Book</a></td>
     </tr>
     <%
             }

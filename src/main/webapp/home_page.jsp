@@ -10,12 +10,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 80vh;
             margin: 0;
         }
 
         h1 {
-            margin-top: 5px; /* Adjust this value as needed */
+            margin-top: 10vh; /* Adjust this value as needed */
         }
 
         .form-container {
@@ -28,8 +28,8 @@
         }
     </style>
 </head>
-<body>
 <h1>Website Home Page</h1>
+<body>
 <div class="form-container">
     <form action="#" method="get">
         <input type="submit" name="manage_database" value="Manage Database">
