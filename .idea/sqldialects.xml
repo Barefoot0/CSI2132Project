@@ -3,6 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/main/webapp/book_info.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/display_rooms.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/edit_employee.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/index.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/manage_database.jsp" dialect="PostgreSQL" />
   </component>

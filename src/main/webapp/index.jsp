@@ -57,6 +57,7 @@
     </style>
 </head>
 <body>
+<button class="back-button" onclick="window.location.href='home_page.jsp'">Back</button>
 <div class="container">
     <h1>Hotel Booking</h1>
     <form action="display_rooms.jsp" method="post">
