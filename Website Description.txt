@@ -35,18 +35,39 @@ Website home page (1)
 
 (4) --> booking_to_renting (7)
 (4) --> index (3)
+
+(6) --> book_info (8)
 =========================
 
 Need to do:
 - Fix the date criteria --- DONE
-- Create booking or renting
+- Create booking or renting -- booking DONE
 
 - Sort out the manage_database stuff (insert/delete/edit)
+	- All the manage_database.jsp UI is "finished" (input boxes appear but they could be prettier)
+	- Need to do the edit_.jsp files now 
+	- Need to make sure the database is actually affected
+		- Creating employee --
+		- Editing employee -- WORKS
+		- Deleting employee --
+		
+		- Creating customer --
+		- Editing customer -- WORKS
+		- Deleting customer --
+
+		- Creating hotel --
+		- Editing hotel -- WORKS
+		- Deleting hotel --
+
+		- Creating room --
+		- Editing room -- WORKS
+		- Deleting room --
+
 - Get the employee stuff done
 	- Get the nav page done
 	- Get the booking_to_renting done
 	- Get processing payments done
-- Sort out the two views
+- Sort out the two views (lowkey what do they actually want with this?)
 
 
 

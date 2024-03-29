@@ -14,15 +14,7 @@
             border-radius: 5px;
             margin-top: 50px;
         }
-        input[type="text"], select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
-        input[type="date"], select {
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -50,12 +42,14 @@
             border-radius: 5px; /* Apply rounded corners */
             cursor: pointer; /* Change cursor to pointer on hover */
         }
+
         h1 {
             text-align: center;
         }
 
     </style>
 </head>
+<button class="back-button" onclick="window.location.href='manage_database.jsp'">Back</button>
 <body>
 <%
     // Process form submission
@@ -96,23 +90,25 @@
                 int hotelId = rs.getInt("Hotel_ID");
                 String ssnOrSin = rs.getString("SSN_Or_SIN");
 %>
-<h2>Edit Employee Details</h2>
-<form action="#" method="post">
-    <input type="hidden" name="edit_employee_id" value="<%=editEmployeeId%>">
-    <label for="full_name">Full Name:</label>
-    <input type="text" id="full_name" name="full_name" value="<%=fullName%>" required><br>
+<div class="container">
+    <h2>Edit Employee Details</h2>
+    <form action="#" method="post">
+        <input type="hidden" name="edit_employee_id" value="<%=editEmployeeId%>">
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" value="<%=fullName%>" required><br>
 
-    <label for="address">Address:</label>
-    <input type="text" id="address" name="address" value="<%=address%>" required><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" value="<%=address%>" required><br>
 
-    <label for="hotel_id">Hotel ID:</label>
-    <input type="text" id="hotel_id" name="hotel_id" value="<%=hotelId%>" required><br>
+        <label for="hotel_id">Hotel ID:</label>
+        <input type="text" id="hotel_id" name="hotel_id" value="<%=hotelId%>" required><br>
 
-    <label for="ssn_or_sin">SSN or SIN:</label>
-    <input type="text" id="ssn_or_sin" name="ssn_or_sin" value="<%=ssnOrSin%>" required><br>
+        <label for="ssn_or_sin">SSN or SIN:</label>
+        <input type="text" id="ssn_or_sin" name="ssn_or_sin" value="<%=ssnOrSin%>" required><br>
 
-    <input type="submit" value="Update Employee">
-</form>
+        <input type="submit" value="Update Employee">
+    </form>
+</div>
 <%
             } else {
                 // Handle case where no employee with given ID is found
@@ -134,6 +130,76 @@
         }
     } else {
         // Handle case where employee ID parameter is not provided
+    }
+%>
+<%
+    // Process form submission for updating employee details
+    String updateEmployeeId = request.getParameter("edit_employee_id");
+    if (updateEmployeeId != null) {
+        String fullName = request.getParameter("full_name");
+        String address = request.getParameter("address");
+        String hotelId = request.getParameter("hotel_id");
+        String ssnOrSin = request.getParameter("ssn_or_sin");
+
+        // Database connection parameters
+        String url = "jdbc:postgresql://localhost:5433/postgres";
+        String username = "postgres";
+        String password = "password";
+
+        // JDBC variables
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        if (fullName != null && address != null && hotelId != null && ssnOrSin != null){
+
+            try {
+                Class.forName("org.postgresql.Driver");
+
+                // Establish a connection to the database
+                conn = DriverManager.getConnection(url, username, password);
+
+                // SQL query to update employee details
+                String sql = "UPDATE website.Employee SET Full_Name = ?, Address = ?, Hotel_ID = ?, SSN_Or_SIN = ? WHERE Employee_ID = ?";
+
+                // Create a PreparedStatement object to execute the SQL query
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, fullName);
+                pstmt.setString(2, address);
+                pstmt.setInt(3, Integer.parseInt(hotelId));
+                pstmt.setString(4, ssnOrSin);
+                pstmt.setInt(5, Integer.parseInt(updateEmployeeId));
+
+                // Execute the SQL query to update employee details
+                int rowsUpdated = pstmt.executeUpdate();
+
+                if (rowsUpdated > 0) {
+%>
+
+<h1>Update Successful</h1>
+<button class="return-button" onclick="window.location.href='manage_database.jsp'">Return</button>
+
+<%
+} else {
+%>
+<div class="container">
+    <h3>Update Failed</h3>
+</div>
+<%
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                // Handle database connection or query errors
+            } finally {
+                // Close the PreparedStatement and database connection
+                try {
+                    if (pstmt != null) pstmt.close();
+                    if (conn != null) conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Handle closing connection errors
+                }
+            }
+        }
     }
 %>
 </body>

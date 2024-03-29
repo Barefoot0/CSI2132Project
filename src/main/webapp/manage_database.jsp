@@ -277,7 +277,7 @@
     <h2>Delete Employee</h2>
     <!-- Add form fields for deleting an employee here -->
     <form action="#" method="post">
-        <label for="edit_employee_id">Employee ID:</label>
+        <label for="delete_employee_id">Employee ID:</label>
         <input type="text" id="delete_employee_id" name="deleteEmployeeId" required><br>
 
         <%
@@ -719,10 +719,10 @@
 %>
 <div class="container">
     <!-- Form for deleting an employee -->
-    <h2>Delete Employee</h2>
+    <h2>Delete Hotel</h2>
     <!-- Add form fields for deleting an employee here -->
     <form action="#" method="post">
-        <label for="delete_hotel_id">Employee ID:</label>
+        <label for="delete_hotel_id">Hotel ID:</label>
         <input type="text" id="delete_hotel_id" name="deleteHotelId" required><br>
 
         <%
@@ -885,13 +885,96 @@
             }
         }
     }
-        }
+        else if (selectedAction.equals("edit")){
+%>
+    <div class=container>
+        <form action="edit_room.jsp" method="get">
+            <label for="edit_room_id">Room ID:</label>
+            <input type="text" id="edit_room_id" name="edit_room_id" required><br>
+            <input type="submit" value="Retrieve Room Details">
+        </form>
+    </div>
+        <%
 
-        if (selectedAction.equals("Edit")){
+        }else if (selectedAction.equals("delete")) {
+    String url = "jdbc:postgresql://localhost:5433/postgres";
+    String username = "postgres";
+    String password = "password";
 
-            
+    // Check if the form is submitted for room deletion
+    if (request.getMethod().equals("POST") && request.getParameter("delete_room_id") != null) {
+        // Retrieve room ID from request parameter
+        String deleteRoomId = request.getParameter("delete_room_id");
+
+        // JDBC variables
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+
+            // Establish a connection to the database
+            conn = DriverManager.getConnection(url, username, password);
+
+            // SQL query to delete room from the database
+            String sql = "DELETE FROM website.Room WHERE Room_ID = ?";
+
+            // Create a PreparedStatement object to execute the SQL query
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, Integer.parseInt(deleteRoomId));
+
+            // Execute the SQL delete query
+            int rowsAffected = pstmt.executeUpdate();
+
+            // Check if the deletion was successful
+            if (rowsAffected > 0) {
+%>
+    <div>
+        <h2>Room deleted successfully!</h2>
+    </div>
+        <%
+            } else {
+%>
+    <div>
+        <h2>No room found with the specified ID.</h2>
+    </div>
+        <%
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+%>
+    <div>
+        <h2>Database error occurred. Please try again later.</h2>
+    </div>
+        <%
+        } finally {
+            // Close the PreparedStatement and database connection
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+}
+%>
+
+        <%
+if (selectedAction.equals("delete")) {
+%>
+    <div>
+        <h2>Delete Room</h2>
+        <form action="#" method="post">
+            <label for="delete_room_id">Room ID:</label>
+            <input type="text" id="delete_room_id" name="delete_room_id" required><br>
+            <input type="submit" value="Delete Room">
+        </form>
+    </div>
+        <%
+}
+    }
+        }
 %>
 </body>
 </html>

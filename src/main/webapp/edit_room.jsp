@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Edit Customer</title>
+    <title>Edit Room</title>
     <style>
         .container {
             width: 50%;
@@ -14,7 +14,15 @@
             border-radius: 5px;
             margin-top: 50px;
         }
-        input[type="text"], input[type="date"] {
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        input[type="number"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -55,6 +63,7 @@
             cursor: pointer; /* Change cursor to pointer on hover */
         }
 
+
         h1 {
             text-align: center;
         }
@@ -65,9 +74,9 @@
 <body>
 <%
     // Process form submission
-    String editCustomerId = request.getParameter("edit_customer_id");
+    String editRoomId = request.getParameter("edit_room_id");
 
-    if (editCustomerId != null) {
+    if (editRoomId != null) {
         // Database connection parameters
         String url = "jdbc:postgresql://localhost:5433/postgres";
         String username = "postgres";
@@ -84,51 +93,53 @@
             // Establish a connection to the database
             conn = DriverManager.getConnection(url, username, password);
 
-            // SQL query to retrieve customer details
-            String sql = "SELECT * FROM website.Customer WHERE Customer_ID = ?";
+            // SQL query to retrieve room details
+            String sql = "SELECT * FROM website.Room WHERE Room_ID = ? FOR UPDATE";
 
             // Create a PreparedStatement object to execute the SQL query
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, Integer.parseInt(editCustomerId));
+            pstmt.setInt(1, Integer.parseInt(editRoomId));
 
-            // Execute the SQL query to retrieve customer details
+            // Execute the SQL query to retrieve room details
             rs = pstmt.executeQuery();
 
-            // Check if customer record exists
+            // Check if room record exists
             if (rs.next()) {
-                // Retrieve customer details
-                int personId = rs.getInt("Person_ID");
-                String fullName = rs.getString("Full_Name");
-                String address = rs.getString("Address");
-                String idType = rs.getString("ID_Type");
-                Date registrationDate = rs.getDate("Registration_Date");
+                // Retrieve room details
+                int hotelId = rs.getInt("Hotel_ID");
+                int price = rs.getInt("Price");
+                int capacity = rs.getInt("Capacity");
+                String view = rs.getString("View");
+                boolean extendable = rs.getBoolean("Extendable");
 %>
 <div class="container">
-    <h2>Edit Customer Details</h2>
-    <form action="#" method="post">
-        <input type="hidden" name="edit_customer_id" value="<%=editCustomerId%>">
-        <label for="full_name">Full Name:</label>
-        <input type="text" id="full_name" name="full_name" value="<%=fullName%>" required><br>
+<h2>Edit Room Details</h2>
+<form action="#" method="post">
+    <input type="hidden" name="edit_room_id" value="<%=editRoomId%>">
+    <label for="hotel_id">Hotel ID:</label>
+    <input type="text" id="hotel_id" name="hotel_id" value="<%=hotelId%>" required><br>
 
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" value="<%=address%>" required><br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" value="<%=price%>" required min="0"><br>
 
-        <label for="id_type">ID Type:</label>
-        <select id="id_type" name="id_type" required>
-            <option value="SIN" <%= idType.equals("SIN") ? "selected" : "" %>>SIN</option>
-            <option value="SSN" <%= idType.equals("SSN") ? "selected" : "" %>>SSN</option>
-            <option value="Driver Licence" <%= idType.equals("Driver Licence") ? "selected" : "" %>>Driver Licence</option>
-        </select><br>
+    <label for="capacity">Capacity:</label>
+    <input type="number" id="capacity" name="capacity" value="<%=capacity%>" required min="1"><br>
 
-        <label for="registration_date">Registration Date:</label>
-        <input type="date" id="registration_date" name="registration_date" value="<%=registrationDate.toString()%>" required><br>
+    <label for="view">View:</label>
+    <select id="view" name="view" required>
+        <option value="Sea" <%= view.equals("Sea") ? "selected" : "" %>>Sea</option>
+        <option value="Mountain" <%= view.equals("Mountain") ? "selected" : "" %>>Mountain</option>
+    </select><br>
 
-        <input type="submit" value="Update Customer">
-    </form>
+    <label for="extendable">Extendable:</label>
+    <input type="checkbox" id="extendable" name="extendable" <%= extendable ? "checked" : "" %>><br>
+
+    <input type="submit" value="Update Room">
+</form>
 </div>
 <%
             } else {
-                // Handle case where no customer with given ID is found
+                // Handle case where no room with given ID is found
                 // You can display an appropriate message here
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -146,17 +157,18 @@
             }
         }
     } else {
-        // Handle case where customer ID parameter is not provided
+        // Handle case where room ID parameter is not provided
     }
 %>
 <%
-    // Process form submission for updating customer details
-    String updateCustomerId = request.getParameter("edit_customer_id");
-    if (updateCustomerId != null) {
-        String fullName = request.getParameter("full_name");
-        String address = request.getParameter("address");
-        String idType = request.getParameter("id_type");
-        String registrationDate = request.getParameter("registration_date");
+    // Process form submission for updating room details
+    String updateRoomId = request.getParameter("edit_room_id");
+    if (updateRoomId != null) {
+        String hotelId = request.getParameter("hotel_id");
+        String price = request.getParameter("price");
+        String capacity = request.getParameter("capacity");
+        String view = request.getParameter("view");
+        String extendable = request.getParameter("extendable") != null ? "true" : "false";
 
         // Database connection parameters
         String url = "jdbc:postgresql://localhost:5433/postgres";
@@ -167,29 +179,30 @@
         Connection conn = null;
         PreparedStatement pstmt = null;
 
-        if (fullName != null && address != null && idType != null && registrationDate != null) {
+        if (hotelId != null && price != null && capacity != null && view != null && extendable != null){
 
-            try {
-                Class.forName("org.postgresql.Driver");
+        try {
+            Class.forName("org.postgresql.Driver");
 
-                // Establish a connection to the database
-                conn = DriverManager.getConnection(url, username, password);
+            // Establish a connection to the database
+            conn = DriverManager.getConnection(url, username, password);
 
-                // SQL query to update customer details
-                String sql = "UPDATE website.Customer SET Full_Name = ?, Address = ?, ID_Type = ?, Registration_Date = ? WHERE Customer_ID = ?";
+            // SQL query to update room details
+            String sql = "UPDATE website.room SET Hotel_ID = ?, Price = ?, Capacity = ?, View = ?, Extendable = ? WHERE Room_ID = ?";
 
-                // Create a PreparedStatement object to execute the SQL query
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, fullName);
-                pstmt.setString(2, address);
-                pstmt.setString(3, idType);
-                pstmt.setDate(4, Date.valueOf(registrationDate));
-                pstmt.setInt(5, Integer.parseInt(updateCustomerId));
+            // Create a PreparedStatement object to execute the SQL query
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, Integer.parseInt(hotelId));
+            pstmt.setInt(2, Integer.parseInt(price));
+            pstmt.setInt(3, Integer.parseInt(capacity));
+            pstmt.setString(4, view);
+            pstmt.setBoolean(5, Boolean.parseBoolean(extendable));
+            pstmt.setInt(6, Integer.parseInt(updateRoomId));
 
-                // Execute the SQL query to update customer details
-                int rowsUpdated = pstmt.executeUpdate();
+            // Execute the SQL query to update room details
+            int rowsUpdated = pstmt.executeUpdate();
 
-                if (rowsUpdated > 0) {
+            if (rowsUpdated > 0) {
 %>
 
 <h1>Update Successful</h1>
@@ -198,23 +211,23 @@
 } else {
 %>
 <div class="container">
-    <h3>Update Failed</h3>
+<h3>Update Failed</h3>
 </div>
 <%
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-                // Handle database connection or query errors
-            } finally {
-                // Close the PreparedStatement and database connection
-                try {
-                    if (pstmt != null) pstmt.close();
-                    if (conn != null) conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    // Handle closing connection errors
-                }
             }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            // Handle database connection or query errors
+        } finally {
+            // Close the PreparedStatement and database connection
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle closing connection errors
+            }
+        }
         }
     }
 %>
