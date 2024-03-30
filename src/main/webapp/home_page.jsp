@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-    <h1>Website Home Page</h1>
+    <h1>Hotel Managment System</h1>
     <div class="form-container">
         <form action="#" method="get">
             <input type="submit" name="manage_database" value="Manage Database">

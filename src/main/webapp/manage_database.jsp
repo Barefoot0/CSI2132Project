@@ -67,7 +67,7 @@
 <body>
 <div class="container">
 <h1>Edit Database</h1>
-<button class="back-button" onclick="window.location.href='home_page'">Back</button>
+<button class="back-button" onclick="window.location.href='home_page.jsp'">Back</button>
 <form action="#" method="post">
     <div class="input-wrapper"?>
     <label for="selectOption">Select Option:</label>
