@@ -48,7 +48,6 @@
             <input type="submit" name="use_customer" value="Use as Customer">
             <input type="submit" name="use_employee" value="Use as Employee">
         </form>
-        <%-- Redirect based on button clicked --%>
         <%
             String manageDatabase = request.getParameter("manage_database");
             String useCustomer = request.getParameter("use_customer");

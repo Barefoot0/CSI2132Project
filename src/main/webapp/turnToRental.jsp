@@ -45,9 +45,9 @@
     <div class="container">
         <h2>Turn Booking to Rental</h2>
         <% 
-            String url = "jdbc:postgresql://localhost:5432/postgres";
-            String username = "martinpatrouchev";
-            String password = "1234";
+            String url = "jdbc:postgresql://localhost:5433/postgres";
+            String username = "postgres";
+            String password = "password";
             
             Connection connection = null;
             PreparedStatement statement = null;
@@ -60,7 +60,7 @@
                 int employeeId = Integer.parseInt(request.getParameter("employeeID"));
                 String customerName = request.getParameter("customerName");
 
-                String sql = "SELECT * FROM Booking WHERE Booking_ID = ?";
+                String sql = "SELECT * FROM website.Booking WHERE Booking_ID = ?";
                 
                 statement = connection.prepareStatement(sql);
                 statement.setInt(1, bookingID);
@@ -70,29 +70,26 @@
                     int hotelId = resultSet1.getInt("Hotel_ID");
                     int roomID = resultSet1.getInt("room_id");
 
-                    // Delete referencing entries from Renting table
-                    String deleteRentingQuery = "DELETE FROM Renting WHERE Booking_ID = ?";
+                    String deleteRentingQuery = "DELETE FROM website.Renting WHERE Booking_ID = ?";
                     statement = connection.prepareStatement(deleteRentingQuery);
                     statement.setInt(1, bookingID);
                     statement.executeUpdate();
                     
-                    // Delete booking entry from Booking table
-                    String deleteBookingQuery = "DELETE FROM Booking WHERE Booking_ID = ?";
+                    String deleteBookingQuery = "DELETE FROM website.Booking WHERE Booking_ID = ?";
                     statement = connection.prepareStatement(deleteBookingQuery);
                     statement.setInt(1, bookingID);
                     statement.executeUpdate();
 
-                    sql = "SELECT Customer_ID FROM Customer WHERE Full_Name = ?";
+                    sql = "SELECT Customer_ID FROM website.Customer WHERE Full_Name = ?";
                     statement = connection.prepareStatement(sql);
                     statement.setString(1, customerName);
                     ResultSet resultSet2 = statement.executeQuery();
                     
-                    // Move the cursor to the first row
                     if (resultSet2.next()) {
                         int customerId = resultSet2.getInt("Customer_ID");
 
 
-                        String rentQuery = "INSERT INTO Renting (Employee_ID, Customer_ID, Renting_Date, Checkin_Date, Checkout_Date, Hotel_ID, Room_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        String rentQuery = "INSERT INTO website.Renting (Employee_ID, Customer_ID, Renting_Date, Checkin_Date, Checkout_Date, Hotel_ID, Room_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
                         PreparedStatement rentStatement = connection.prepareStatement(rentQuery);
                         rentStatement.setInt(1, employeeId);
                         rentStatement.setInt(2, customerId); 
@@ -104,7 +101,7 @@
                         
                         int rowsAffected = rentStatement.executeUpdate();
                         
-                        out.println("<div class=\"message\">Booking successfully turned into a rental.</div>");
+                        System.out.println("<div class=\"message\">Booking successfully turned into a rental.</div>");
                     } else {
                         throw new SQLException("Customer not found.");
                     }
@@ -114,9 +111,8 @@
                 
             } catch (Exception e) {
                 System.out.println("Error occurred: " + e.getMessage());
-                out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
+                System.out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
             } finally {
-                // Close connections
                 try {
                     if (statement != null) statement.close();
                     if (connection != null) connection.close();

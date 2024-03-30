@@ -50,10 +50,9 @@
         int roomID = Integer.parseInt(request.getParameter("roomID"));
         int employeeID = Integer.parseInt(request.getParameter("employeeId"));
         
-        // Establish database connection
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        String username = "martinpatrouchev";
-        String password = "1234";
+            String url = "jdbc:postgresql://localhost:5433/postgres";
+            String username = "postgres";
+            String password = "password";
         Connection connection = null;
         PreparedStatement rentStatement = null;
         ResultSet hotelResultSet = null;
@@ -62,8 +61,7 @@
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, username, password);
             
-            // Retrieve hotel_id associated with the rented room
-            String hotelQuery = "SELECT Hotel_ID FROM Room WHERE Room_ID = ?";
+            String hotelQuery = "SELECT Hotel_ID FROM website.Room WHERE Room_ID = ?";
             PreparedStatement hotelStatement = connection.prepareStatement(hotelQuery);
             hotelStatement.setInt(1, roomID);
             hotelResultSet = hotelStatement.executeQuery();
@@ -74,12 +72,11 @@
             }
             
             if (hotelID != -1) {
-                // Insert rental record
-                String rentQuery = "INSERT INTO Renting (Employee_ID, Customer_ID, Renting_Date, Checkin_Date, Checkout_Date, Hotel_ID, Room_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String rentQuery = "INSERT INTO website.Renting (Employee_ID, Customer_ID, Renting_Date, Checkin_Date, Checkout_Date, Hotel_ID, Room_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 rentStatement = connection.prepareStatement(rentQuery);
                 rentStatement.setInt(1, employeeID);
-                rentStatement.setInt(2, 1); // Replace with the actual customer ID
-                rentStatement.setDate(3, new Date(System.currentTimeMillis())); // Renting date
+                rentStatement.setInt(2, 1);
+                rentStatement.setDate(3, new Date(System.currentTimeMillis()));
                 rentStatement.setDate(4, null); 
                 rentStatement.setDate(5, null); 
                 rentStatement.setInt(6, hotelID); 
@@ -88,19 +85,18 @@
                 int rowsAffected = rentStatement.executeUpdate();
                 
                 if (rowsAffected > 0) {
-                    out.println("<div class=\"message\">Room rented successfully!</div>");
+                    System.out.println("<div class=\"message\">Room rented successfully!</div>");
                 } else {
-                    out.println("<div class=\"message\">Failed to rent room.</div>");
+                    System.out.println("<div class=\"message\">Failed to rent room.</div>");
                 }
             } else {
-                out.println("<div class=\"message\">Failed to retrieve hotel information for the rented room.</div>");
+                System.out.println("<div class=\"message\">Failed to retrieve hotel information for the rented room.</div>");
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
+            System.out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
         } finally {
-            // Close connections
             try {
                 if (hotelResultSet != null) hotelResultSet.close();
                 if (rentStatement != null) rentStatement.close();

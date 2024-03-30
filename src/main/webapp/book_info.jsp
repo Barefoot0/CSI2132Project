@@ -41,15 +41,15 @@
             cursor: pointer;
         }
         .back-button {
-            position: fixed; /* Position the button relative to the browser window */
-            top: 20px; /* Set the distance from the top */
-            left: 20px; /* Set the distance from the left */
-            padding: 10px 20px; /* Set padding to make the button clickable */
-            background-color: #007bff; /* Set background color */
-            color: #fff; /* Set text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Apply rounded corners */
-            cursor: pointer; /* Change cursor to pointer on hover */
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         h1 {
             text-align: center;
@@ -61,8 +61,8 @@
 <button class="back-button" onclick="window.location.href='display_rooms.jsp'">Back</button>
 <div class="container">
     <form method="post" action="#">
-        <label for="customer_id">Customer ID:</label>
-        <input type="text" id="customer_id" name="customer_id" required><br>
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" required><br>
 
         <label for="booking_date">Booking Date:</label>
         <input type="date" id="booking_date" name="booking_date" value="<%= new java.util.Date().toString() %>" required><br>
@@ -82,61 +82,65 @@
         <input type="submit" value="Book">
     </form>
 
-<%
-        // Process form submission to create a booking
+    <%
         if (request.getMethod().equals("POST")) {
-            String customerId = request.getParameter("customer_id");
+            String fullName = request.getParameter("full_name");
             String bookingDate = request.getParameter("booking_date");
             String checkinDate = request.getParameter("checkin_date");
             String checkoutDate = request.getParameter("checkout_date");
             String hotelId = request.getParameter("hotel_id");
             String roomId = request.getParameter("room_id");
 
-            // Database connection parameters
             String url = "jdbc:postgresql://localhost:5433/postgres";
             String username = "postgres";
             String password = "password";
 
-            // JDBC variables
             Connection conn = null;
             PreparedStatement pstmt = null;
+            ResultSet rs = null;
 
             try {
-                // Load the MySQL JDBC driver
                 Class.forName("org.postgresql.Driver");
 
-                // Establish a connection to the database
                 conn = DriverManager.getConnection(url, username, password);
 
-                // SQL query to insert a booking into the database
-                String sql = "INSERT INTO website.Booking (Customer_ID, Booking_Date, Checkin_Date, Checkout_Date, Hotel_ID, Room_ID) VALUES (?, ?, ?, ?, ?, ?)";
-                pstmt = conn.prepareStatement(sql);
+                String query = "SELECT Customer_ID FROM website.Customer WHERE Full_Name=?";
+                pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, fullName);
+                rs = pstmt.executeQuery();
 
-                // Set the parameters for the PreparedStatement
-                pstmt.setInt(1, Integer.parseInt(customerId));
+                int customerId = -1; // Default value if not found
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date parsedBookDate = sdf.parse(bookingDate);
-                java.sql.Date sqlBookDate = new java.sql.Date(parsedBookDate.getTime());
-                SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date parsedStartDate = sdf2.parse(checkinDate);
-                java.sql.Date sqlStartDate = new java.sql.Date(parsedStartDate.getTime());
-                SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date parsedEndDate = sdf3.parse(checkoutDate);
-                java.sql.Date sqlEndDate = new java.sql.Date(parsedEndDate.getTime());
+                if (rs.next()) {
+                    customerId = rs.getInt("Customer_ID");
+                }
 
-                pstmt.setDate(2, sqlBookDate);
-                pstmt.setDate(3, sqlStartDate);
-                pstmt.setDate(4, sqlEndDate);
-                pstmt.setInt(5, Integer.parseInt(hotelId));
-                pstmt.setInt(6, Integer.parseInt(roomId));
+                if (customerId != -1) {
+                    String sql = "INSERT INTO website.Booking (Customer_ID, Booking_Date, Checkin_Date, Checkout_Date, Hotel_ID, Room_ID) VALUES (?, ?, ?, ?, ?, ?)";
+                    pstmt = conn.prepareStatement(sql);
 
-                // Execute the SQL query to insert the booking into the database
-                int rowsAffected = pstmt.executeUpdate();
+                    pstmt.setInt(1, customerId);
 
-                // Check if the insertion was successful
-                if (rowsAffected > 0) {
-%>
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    java.util.Date parsedBookDate = sdf.parse(bookingDate);
+                    java.sql.Date sqlBookDate = new java.sql.Date(parsedBookDate.getTime());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+                    java.util.Date parsedStartDate = sdf2.parse(checkinDate);
+                    java.sql.Date sqlStartDate = new java.sql.Date(parsedStartDate.getTime());
+                    SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
+                    java.util.Date parsedEndDate = sdf3.parse(checkoutDate);
+                    java.sql.Date sqlEndDate = new java.sql.Date(parsedEndDate.getTime());
+
+                    pstmt.setDate(2, sqlBookDate);
+                    pstmt.setDate(3, sqlStartDate);
+                    pstmt.setDate(4, sqlEndDate);
+                    pstmt.setInt(5, Integer.parseInt(hotelId));
+                    pstmt.setInt(6, Integer.parseInt(roomId));
+
+                    int rowsAffected = pstmt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+    %>
     <p>Booking created successfully!</p>
     <%
     } else {
@@ -144,14 +148,19 @@
     <p>Error creating booking. Please try again.</p>
     <%
         }
-    } catch (SQLException | ClassNotFoundException e) {
+    } else {
+    %>
+    <p>Customer not found.</p>
+    <%
+        }
+    } catch (SQLException | ClassNotFoundException | ParseException e) {
         e.printStackTrace();
     %>
-    <p>Database error occurred. Please try again later.</p>
+    <p>Error occurred. Please try again later.</p>
     <%
             } finally {
-                // Close the PreparedStatement and database connection
                 try {
+                    if (rs != null) rs.close();
                     if (pstmt != null) pstmt.close();
                     if (conn != null) conn.close();
                 } catch (SQLException e) {

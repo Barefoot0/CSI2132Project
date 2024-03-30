@@ -41,15 +41,15 @@
             cursor: pointer;
         }
         .back-button {
-            position: fixed; /* Position the button relative to the browser window */
-            top: 20px; /* Set the distance from the top */
-            left: 20px; /* Set the distance from the left */
-            padding: 10px 20px; /* Set padding to make the button clickable */
-            background-color: #007bff; /* Set background color */
-            color: #fff; /* Set text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Apply rounded corners */
-            cursor: pointer; /* Change cursor to pointer on hover */
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         h1 {
             text-align: center;
@@ -63,22 +63,11 @@
     <form action="display_rooms.jsp" method="post">
         <label for="start_date">Start Date (yyyy-mm-dd): </label>
         <input type="date" id="start_date" name="start_date" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" required>
-
         <br>
-
         <label for="end_date">End Date (yyyy-mm-dd): </label>
         <input type="date" id="end_date" name="end_date" placeholder="yyyy-mm-dd" pattern="\d{4}-\d{2}-\d{2}" required>
-
         <br>
-
-        <label for="booking_renting">Booking/Renting:</label>
-        <select id="booking_renting" name="booking_renting">
-            <option value="booking">Booking</option>
-            <option value="renting">Renting</option>
-        </select>
-
         <br>
-
         <label for="room_capacity">Room Capacity:</label>
         <select id="room_capacity" name="room_capacity">
             <option value="1">1</option>
@@ -86,13 +75,10 @@
             <option value="3">3</option>
             <option value="4">4</option>
         </select>
-
         <br>
-
         <label for="hotel_chain">Hotel Chain:</label>
         <select id="hotel_chain" name="hotel_chain">
             <%
-                // Dynamically generate options for hotel chains from database
                 Connection conn = null;
                 PreparedStatement pstmt = null;
                 ResultSet rs = null;
@@ -122,9 +108,7 @@
                 }
             %>
         </select>
-
         <br>
-
         <label for="hotel_rating">Hotel Rating:</label>
         <select id="hotel_rating" name="hotel_rating">
             <option value="1">1</option>
@@ -133,28 +117,20 @@
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
-
         <br>
-
         <label for="price">Price:</label>
         <input type="text" id="price" name="price">
-
         <br>
-
         <label for="total_rooms">Total Rooms in Hotel:</label>
         <input type="text" id="total_rooms" name="total_rooms">
-
         <br>
-
         <label for="view">View:</label>
         <select id="view" name="view">
             <option value=""></option>
             <option value="Sea">Sea</option>
             <option value="Mountain">Mountain</option>
         </select>
-
         <br>
-
         <button type="submit">Submit</button>
     </form>
 </div>

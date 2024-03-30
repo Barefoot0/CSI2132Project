@@ -34,15 +34,15 @@
             cursor: pointer;
         }
         .back-button {
-            position: fixed; /* Position the button relative to the browser window */
-            top: 20px; /* Set the distance from the top */
-            left: 20px; /* Set the distance from the left */
-            padding: 10px 20px; /* Set padding to make the button clickable */
-            background-color: #007bff; /* Set background color */
-            color: #fff; /* Set text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Apply rounded corners */
-            cursor: pointer; /* Change cursor to pointer on hover */
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         h1 {
             text-align: center;
@@ -52,10 +52,8 @@
 <body>
 <h1>Search Results</h1>
 <button class="back-button" onclick="window.location.href='index.jsp'">Back</button>
-<%-- Retrieve criteria entered by the user --%>
 <% String startDate = request.getParameter("start_date");
     String endDate = request.getParameter("end_date");
-//    String bookingRenting = request.getParameter("booking_renting");
     String roomCapacity = request.getParameter("room_capacity");
     String hotelChain = request.getParameter("hotel_chain");
     String hotelRating = request.getParameter("hotel_rating");
@@ -64,25 +62,15 @@
     String view = request.getParameter("view");
 %>
 
-<%-- Query the database for rooms that satisfy the criteria --%>
 <%
     String query = "SELECT * FROM website.Room WHERE 1=1"; // Base query
 
-    // Add conditions based on user input
     if (startDate != null && !startDate.isEmpty()) {
         query += " AND Room_ID NOT IN (SELECT Room_ID FROM website.Booking WHERE CAST(Checkin_Date AS DATE) <= ? AND CAST(Checkout_Date AS DATE) >= ?)";
     }
     if (endDate != null && !endDate.isEmpty()) {
         query += " AND Room_ID NOT IN (SELECT Room_ID FROM website.Booking WHERE CAST(Checkin_Date AS DATE) <= ? AND CAST(Checkout_Date AS DATE) >= ?)";
     }
-//    if (bookingRenting != null && !bookingRenting.isEmpty()) {
-//        // Add condition based on booking/renting option
-//        if (bookingRenting.equals("booking")) {
-//            query += " AND Room_ID NOT IN (SELECT Room_ID FROM Booking)";
-//        } else if (bookingRenting.equals("renting")) {
-//            query += " AND Room_ID NOT IN (SELECT Room_ID FROM Renting)";
-//        }
-//    }
     if (roomCapacity != null && !roomCapacity.isEmpty()) {
         query += " AND Capacity >= ?";
     }
@@ -102,43 +90,34 @@
         query += " AND View = ?";
     }
 
-    // Prepare and execute the query
     try {
         Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5433/postgres", "postgres", "password"); /* get database connection */;
         PreparedStatement pstmt = conn.prepareStatement(query);
         int paramIndex = 1;
         if (startDate != null && !startDate.isEmpty()) {
             try {
-                // Parse startDate string into java.util.Date object
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date parsedStartDate = sdf.parse(startDate);
 
-                // Convert java.util.Date to java.sql.Date
                 java.sql.Date sqlStartDate = new java.sql.Date(parsedStartDate.getTime());
 
-                // Set sqlStartDate as parameter
                 pstmt.setDate(paramIndex++, sqlStartDate);
                 pstmt.setDate(paramIndex++, sqlStartDate);
             } catch (ParseException e) {
-                // Handle parse exception
                 e.printStackTrace();
             }
         }
 
         if (endDate != null && !endDate.isEmpty()) {
             try {
-                // Parse endDate string into java.util.Date object
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date parsedEndDate = sdf.parse(endDate);
 
-                // Convert java.util.Date to java.sql.Date
                 java.sql.Date sqlEndDate = new java.sql.Date(parsedEndDate.getTime());
 
-                // Set sqlEndDate as parameter
                 pstmt.setDate(paramIndex++, sqlEndDate);
                 pstmt.setDate(paramIndex++, sqlEndDate);
             } catch (ParseException e) {
-                // Handle parse exception
                 e.printStackTrace();
             }
         }
@@ -163,16 +142,15 @@
 
         ResultSet rs = pstmt.executeQuery();
 
-        // Process the results
 %>
 <style>
     table {
-        width: 80%; /* Set the width of the table */
-        margin: 0 auto; /* Center the table horizontally */
+        width: 80%;/
+        margin: 0 auto;
         border-collapse: collapse;
     }
     th, td {
-        padding: 10px; /* Increase padding for better spacing */
+        padding: 10px;
         text-align: left;
         border-bottom: 1px solid #ddd;
     }
@@ -195,7 +173,6 @@
     <tbody>
     <%
         while (rs.next()) {
-            // Retrieve room information from the result set
             int roomId = rs.getInt("Room_ID");
             int hotelId = rs.getInt("Hotel_ID");
             int price2 = rs.getInt("Price");
@@ -227,13 +204,11 @@
     </tr>
     <%
             }
-            // Close resources
             rs.close();
             pstmt.close();
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle SQLException
         }
     %>
     </tbody>

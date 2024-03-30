@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/src/main/webapp/book.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/book_info.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/create_customer.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/create_employee.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/create_hotel.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/create_room.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/delete_customer.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/delete_employee.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/delete_hotel.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/delete_room.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/display_rooms.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/edit_customer.jsp" dialect="PostgreSQL" />
@@ -14,6 +17,11 @@
     <file url="file://$PROJECT_DIR$/src/main/webapp/edit_hotel.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/edit_room.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/index.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/manageBookingsAndRentals.jsp" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/manage_database.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/rent.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/selectHotel.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/turnToRental.jsp" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/viewRooms.jsp" dialect="PostgreSQL" />
   </component>
 </project>

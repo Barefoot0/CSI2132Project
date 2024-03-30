@@ -60,9 +60,9 @@
     ResultSet roomResultSet = null;
 
     try {
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        String username = "martinpatrouchev";
-        String password = "1234";
+        String url = "jdbc:postgresql://localhost:5433/postgres";
+        String username = "postgres";
+        String password = "password";
         Class.forName("org.postgresql.Driver");
         connection = DriverManager.getConnection(url, username, password);
 

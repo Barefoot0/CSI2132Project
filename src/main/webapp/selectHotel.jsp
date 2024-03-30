@@ -32,10 +32,9 @@
     String customerName = request.getParameter("customerName");
     String employeeId = request.getParameter("employeeID");
     
-    // Establish database connection
-    String url = "jdbc:postgresql://localhost:5432/postgres";
-    String username = "martinpatrouchev";
-    String password = "1234";
+        String url = "jdbc:postgresql://localhost:5433/postgres";
+        String username = "postgres";
+        String password = "password";
     Connection connection = null;
     PreparedStatement hotelStatement = null;
     ResultSet hotelResultSet = null;
@@ -44,24 +43,20 @@
         Class.forName("org.postgresql.Driver");
         connection = DriverManager.getConnection(url, username, password);
         
-        // Query to retrieve distinct hotels
-        String hotelQuery = "SELECT DISTINCT hotel_chain_name FROM Hotel";
+        String hotelQuery = "SELECT DISTINCT hotel_chain_name FROM website.Hotel";
         hotelStatement = connection.prepareStatement(hotelQuery);
         hotelResultSet = hotelStatement.executeQuery();
         
-        // Display hotels as links
         while (hotelResultSet.next()) {
             String hotelName = hotelResultSet.getString("hotel_chain_name");
             
-            // Output hotel name as a link
-            out.println("<p><a href='viewRooms.jsp?hotelName=" + hotelName + "&customerName=" + customerName + "&employeeId=" + employeeId + "'>" + hotelName + "</a></p>");
+            System.out.println("<p><a href='viewRooms.jsp?hotelName=" + hotelName + "&customerName=" + customerName + "&employeeId=" + employeeId + "'>" + hotelName + "</a></p>");
         }
         
     } catch (Exception e) {
         e.printStackTrace();
-        out.println("<div>" + e.getMessage() +  "</div>");
+        System.out.println("<div>" + e.getMessage() +  "</div>");
     } finally {
-        // Close connections
         try {
             if (hotelResultSet != null) hotelResultSet.close();
             if (hotelStatement != null) hotelStatement.close();

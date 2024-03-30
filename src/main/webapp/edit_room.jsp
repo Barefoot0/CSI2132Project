@@ -40,29 +40,16 @@
             cursor: pointer;
         }
         .back-button {
-            position: fixed; /* Position the button relative to the browser window */
-            top: 20px; /* Set the distance from the top */
-            left: 20px; /* Set the distance from the left */
-            padding: 10px 20px; /* Set padding to make the button clickable */
-            background-color: #007bff; /* Set background color */
-            color: #fff; /* Set text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Apply rounded corners */
-            cursor: pointer; /* Change cursor to pointer on hover */
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        .return-button {
-            position: fixed; /* Position the button relative to the browser window */
-            bottom: 20px; /* Set the distance from the bottom */
-            left: 50%; /* Set the button to the center horizontally */
-            transform: translateX(-50%); /* Center the button horizontally */
-            padding: 10px 20px; /* Set padding to make the button clickable */
-            background-color: #007bff; /* Set background color */
-            color: #fff; /* Set text color */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Apply rounded corners */
-            cursor: pointer; /* Change cursor to pointer on hover */
-        }
-
 
         h1 {
             text-align: center;
@@ -73,16 +60,13 @@
 <button class="back-button" onclick="window.location.href='manage_database.jsp'">Back</button>
 <body>
 <%
-    // Process form submission
     String editRoomId = request.getParameter("edit_room_id");
 
     if (editRoomId != null) {
-        // Database connection parameters
         String url = "jdbc:postgresql://localhost:5433/postgres";
         String username = "postgres";
         String password = "password";
 
-        // JDBC variables
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -90,22 +74,16 @@
         try {
             Class.forName("org.postgresql.Driver");
 
-            // Establish a connection to the database
             conn = DriverManager.getConnection(url, username, password);
 
-            // SQL query to retrieve room details
             String sql = "SELECT * FROM website.Room WHERE Room_ID = ? FOR UPDATE";
 
-            // Create a PreparedStatement object to execute the SQL query
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(editRoomId));
 
-            // Execute the SQL query to retrieve room details
             rs = pstmt.executeQuery();
 
-            // Check if room record exists
             if (rs.next()) {
-                // Retrieve room details
                 int hotelId = rs.getInt("Hotel_ID");
                 int price = rs.getInt("Price");
                 int capacity = rs.getInt("Capacity");
@@ -138,30 +116,21 @@
 </form>
 </div>
 <%
-            } else {
-                // Handle case where no room with given ID is found
-                // You can display an appropriate message here
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            // Handle database connection or query errors
         } finally {
-            // Close the ResultSet, PreparedStatement, and database connection
             try {
                 if (rs != null) rs.close();
                 if (pstmt != null) pstmt.close();
                 if (conn != null) conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                // Handle closing connection errors
             }
         }
-    } else {
-        // Handle case where room ID parameter is not provided
     }
 %>
 <%
-    // Process form submission for updating room details
     String updateRoomId = request.getParameter("edit_room_id");
     if (updateRoomId != null) {
         String hotelId = request.getParameter("hotel_id");
@@ -170,12 +139,10 @@
         String view = request.getParameter("view");
         String extendable = request.getParameter("extendable") != null ? "true" : "false";
 
-        // Database connection parameters
         String url = "jdbc:postgresql://localhost:5433/postgres";
         String username = "postgres";
         String password = "password";
 
-        // JDBC variables
         Connection conn = null;
         PreparedStatement pstmt = null;
 
@@ -184,13 +151,10 @@
         try {
             Class.forName("org.postgresql.Driver");
 
-            // Establish a connection to the database
             conn = DriverManager.getConnection(url, username, password);
 
-            // SQL query to update room details
             String sql = "UPDATE website.room SET Hotel_ID = ?, Price = ?, Capacity = ?, View = ?, Extendable = ? WHERE Room_ID = ?";
 
-            // Create a PreparedStatement object to execute the SQL query
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(hotelId));
             pstmt.setInt(2, Integer.parseInt(price));
@@ -199,14 +163,13 @@
             pstmt.setBoolean(5, Boolean.parseBoolean(extendable));
             pstmt.setInt(6, Integer.parseInt(updateRoomId));
 
-            // Execute the SQL query to update room details
             int rowsUpdated = pstmt.executeUpdate();
 
             if (rowsUpdated > 0) {
+                response.sendRedirect("manage_database.jsp");
 %>
 
 <h1>Update Successful</h1>
-<button class="return-button" onclick="window.location.href='manage_database.jsp'">Return</button>
 <%
 } else {
 %>
@@ -217,15 +180,12 @@
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-            // Handle database connection or query errors
         } finally {
-            // Close the PreparedStatement and database connection
             try {
                 if (pstmt != null) pstmt.close();
                 if (conn != null) conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                // Handle closing connection errors
             }
         }
         }

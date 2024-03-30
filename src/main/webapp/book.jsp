@@ -49,10 +49,9 @@
         String customerName = request.getParameter("customerName");
         int roomID = Integer.parseInt(request.getParameter("roomID"));
         
-        // Establish database connection
-        String url = "jdbc:postgresql://localhost:5432/postgres";
-        String username = "martinpatrouchev";
-        String password = "1234";
+        String url = "jdbc:postgresql://localhost:5433/postgres";
+        String username = "postgres";
+        String password = "password";
         Connection connection = null;
         PreparedStatement bookStatement = null;
         ResultSet hotelResultSet = null;
@@ -61,8 +60,7 @@
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, username, password);
             
-            // Retrieve hotel_id associated with the booked room
-            String hotelQuery = "SELECT Hotel_ID FROM Room WHERE Room_ID = ?";
+            String hotelQuery = "SELECT Hotel_ID FROM website.Room WHERE Room_ID = ?";
             PreparedStatement hotelStatement = connection.prepareStatement(hotelQuery);
             hotelStatement.setInt(1, roomID);
             hotelResultSet = hotelStatement.executeQuery();
@@ -73,30 +71,28 @@
             }
             
             if (hotelID != -1) {
-                // Insert booking record
-                String bookQuery = "INSERT INTO Booking (Customer_ID, Booking_Date, Room_ID, Hotel_ID) VALUES (?, ?, ?, ?)";
+                String bookQuery = "INSERT INTO website.Booking (Customer_ID, Booking_Date, Room_ID, Hotel_ID) VALUES (?, ?, ?, ?)";
                 bookStatement = connection.prepareStatement(bookQuery);
-                bookStatement.setInt(1, 1); // Replace with the actual customer ID
-                bookStatement.setDate(2, new Date(System.currentTimeMillis())); // Booking date
+                bookStatement.setInt(1, 1);
+                bookStatement.setDate(2, new Date(System.currentTimeMillis()));
                 bookStatement.setInt(3, roomID);
-                bookStatement.setInt(4, hotelID); // Set hotel_id
+                bookStatement.setInt(4, hotelID);
                 
                 int rowsAffected = bookStatement.executeUpdate();
                 
                 if (rowsAffected > 0) {
-                    out.println("<div class=\"message\">Room booked successfully!</div>");
+                    System.out.println("<div class=\"message\">Room booked successfully!</div>");
                 } else {
-                    out.println("<div class=\"message\">Failed to book room.</div>");
+                    System.out.println("<div class=\"message\">Failed to book room.</div>");
                 }
             } else {
-                out.println("<div class=\"message\">Failed to retrieve hotel information for the booked room.</div>");
+                System.out.println("<div class=\"message\">Failed to retrieve hotel information for the booked room.</div>");
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
+            System.out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
         } finally {
-            // Close connections
             try {
                 if (hotelResultSet != null) hotelResultSet.close();
                 if (bookStatement != null) bookStatement.close();
