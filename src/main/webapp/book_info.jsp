@@ -140,6 +140,7 @@
                     int rowsAffected = pstmt.executeUpdate();
 
                     if (rowsAffected > 0) {
+                        response.sendRedirect("index.jsp");
     %>
     <p>Booking created successfully!</p>
     <%

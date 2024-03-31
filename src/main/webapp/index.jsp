@@ -78,6 +78,7 @@
         <br>
         <label for="hotel_chain">Hotel Chain:</label>
         <select id="hotel_chain" name="hotel_chain">
+            <option value=""></option>
             <%
                 Connection conn = null;
                 PreparedStatement pstmt = null;

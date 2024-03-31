@@ -70,13 +70,13 @@
         String hotelChainName = request.getParameter("hotelName");
         int employeeId = Integer.parseInt(request.getParameter("employeeId"));
 
-        capacityStatement = connection.prepareStatement("SELECT TotalCapacity FROM capacityOfRooms");
+        capacityStatement = connection.prepareStatement("SELECT TotalCapacity FROM website.capacityOfRooms");
         capacityResultSet = capacityStatement.executeQuery();
         if (capacityResultSet.next()) {
             totalCapacity = capacityResultSet.getInt("TotalCapacity");
         }
 
-        availableRoomsStatement = connection.prepareStatement("SELECT * FROM AvailableRoomsPerArea");
+        availableRoomsStatement = connection.prepareStatement("SELECT * FROM website.availableroomsperarea");
         availableRoomsResultSet = availableRoomsStatement.executeQuery();
 
         // Display data for sea view in HTML table
@@ -96,16 +96,16 @@
         <%
 
         String roomQuery = "SELECT r.Room_ID, r.Price, r.Capacity, h.Address, a.Amenity, r.view " +
-                           "FROM Room r " +
-                           "JOIN Hotel h ON r.Hotel_ID = h.Hotel_ID " +
-                           "LEFT JOIN Amenity a ON r.Room_ID = a.Room_ID AND r.Hotel_ID = a.Hotel_ID " +
+                           "FROM website.Room r " +
+                           "JOIN website.Hotel h ON r.Hotel_ID = h.Hotel_ID " +
+                           "LEFT JOIN website.Amenity a ON r.Room_ID = a.Room_ID AND r.Hotel_ID = a.Hotel_ID " +
                            "WHERE h.hotel_chain_name = ?";
         roomStatement = connection.prepareStatement(roomQuery);
         roomStatement.setString(1, hotelChainName);
         roomResultSet = roomStatement.executeQuery();
         %>
         <div class="view-info">
-            <p>Number of Available Rooms: <%= numAvailableRooms %></p>
+            <p>Number of Available Rooms: <%= totalCapacity %></p>
         </div>
         <%
         while (roomResultSet.next()) {
@@ -136,7 +136,7 @@
         
     } catch (Exception e) {
         e.printStackTrace();
-        out.println("<div>" + e.getMessage() +  "</div>");
+            System.out.println("<div>" + e.getMessage() +  "</div>");
     } finally {
         try {
             if (roomResultSet != null) roomResultSet.close();

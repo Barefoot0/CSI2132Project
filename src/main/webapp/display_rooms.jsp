@@ -145,7 +145,7 @@
 %>
 <style>
     table {
-        width: 80%;/
+        width: 80%;
         margin: 0 auto;
         border-collapse: collapse;
     }
@@ -161,8 +161,8 @@
 <table>
     <thead>
     <tr>
-        <th>Room ID</th>
-        <th>Hotel ID</th>
+        <th>Room Number</th>
+        <th>Hotel Name</th>
         <th>Price</th>
         <th>Rating</th>
         <th>Capacity</th>
@@ -188,6 +188,16 @@
                 }
                 rs2.close();
                 pstmnt2.close();
+//                String hotel_chain_name = "";
+                PreparedStatement pstmnt3 = conn.prepareStatement("SELECT hotel_chain_name FROM website.Hotel WHERE Hotel_ID = ?");
+                pstmnt3.setInt(1, rs.getInt("Hotel_ID"));
+                ResultSet rs3 = pstmnt3.executeQuery();
+                if (rs3.next()) {
+                    hotelChain = rs3.getString("hotel_chain_name");
+                }
+                rs3.close();
+                pstmnt3.close();
+
             } catch(SQLException e){
                 e.printStackTrace();
             }
@@ -195,7 +205,7 @@
     %>
     <tr>
         <td><%= roomId %></td>
-        <td><%= hotelId %></td>
+        <td><%= hotelChain %></td>
         <td><%= price2 %></td>
         <td><%= rating %></td>
         <td><%= capacity %></td>

@@ -59,6 +59,7 @@
     } catch (Exception e) {
         System.out.println("Error occurred: " + e.getMessage());
         System.out.println("<div>" + e.getMessage() +  "</div>");
+        System.out.println("<div class=\"message\">" + e.getMessage() +  "</div>");
     } finally {
         System.out.println("<div>" + "sad connect" + "</div>");
         if (resultSet != null) {
